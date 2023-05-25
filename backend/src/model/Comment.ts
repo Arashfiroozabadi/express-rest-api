@@ -1,5 +1,5 @@
-import { IComment } from '@interfaces';
 import mongoose from 'mongoose';
+import { IComment } from '../interfaces';
 
 const Schema = mongoose.Schema;
 

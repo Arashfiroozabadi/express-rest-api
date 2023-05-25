@@ -1,5 +1,5 @@
-import { ITag } from '@interfaces';
 import mongoose from 'mongoose';
+import { ITag } from '../interfaces';
 
 const Schema = mongoose.Schema;
 

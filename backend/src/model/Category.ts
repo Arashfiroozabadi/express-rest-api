@@ -1,5 +1,5 @@
-import { ICategory } from '@interfaces';
 import mongoose from 'mongoose';
+import { ICategory } from '../interfaces';
 
 const Schema = mongoose.Schema;
 

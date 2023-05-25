@@ -1,5 +1,5 @@
-import { IPost } from '@interfaces';
 import mongoose from 'mongoose';
+import { IPost } from '../interfaces';
 
 const Schema = mongoose.Schema;
 
