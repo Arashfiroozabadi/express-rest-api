@@ -1,9 +1,11 @@
 import { Router } from 'express';
+import PostModel from '@model/Post';
 
 const routes = Router();
 
-routes.get('/', (req, res) => {
-    return res.json({ message: 'this is post route' });
+routes.get('/', async (req, res) => {
+    const posts = await PostModel.find();
+    return res.status(200).send({ posts });
 });
 
 export default routes;
