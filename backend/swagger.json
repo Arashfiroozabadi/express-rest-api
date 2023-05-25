@@ -22,9 +22,10 @@
           "Posts"
         ],
         "summary": "Get all posts",
+        "description": "Retrieve all Posts from the database",
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "A list of Posts",
             "schema": {
               "$ref": "#/definitions/Posts"
             }
