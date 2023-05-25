@@ -2,7 +2,7 @@ import express from 'express';
 import morgan from 'morgan';
 
 import routes from './routes';
-import connectToDB from "@lib/connectToDB";
+import connectToDB from '@lib/connectToDB';
 
 class App {
     public server;
@@ -15,16 +15,16 @@ class App {
 
         connectToDB
             .then(() => {
-                console.log('db connected')
+                console.log('db connected');
             })
-            .catch(err => {
-                console.error(err)
-            })
+            .catch((err) => {
+                console.error(err);
+            });
     }
 
     middlewares() {
         this.server.use(express.json());
-        this.server.use(morgan('dev'))
+        this.server.use(morgan('dev'));
     }
 
     routes() {
