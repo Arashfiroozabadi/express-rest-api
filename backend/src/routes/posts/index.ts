@@ -10,4 +10,10 @@ routes.get('/', async (req, res) => {
     return res.status(200).send({ posts });
 });
 
+
+routes.post('/', async (req, res) => {
+
+});
+
+
 export default routes;
