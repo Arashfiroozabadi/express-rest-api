@@ -1,17 +1,17 @@
 export interface IPost {
     title: string;
-    description?: string;
+    description: string;
     abstract: string;
-    readingTime: number;
-    like: number;
-    dislike: number;
-    photo: string;
+    readingTime?: number;
+    like?: number;
+    dislike?: number;
+    photo?: string;
     categories?: ICategory[];
     tags?: ITag[];
     author: IUser;
-    publishAt: Date;
-    updateAt: Date;
-    createdAt: Date;
+    publishAt?: Date;
+    updateAt?: Date;
+    createdAt?: Date;
     comments?: IComment[];
 }
 
