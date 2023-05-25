@@ -2,7 +2,8 @@ import express from 'express';
 import morgan from 'morgan';
 
 import routes from './routes';
-import connectToDB from '@lib/connectToDB';
+import connectToDB from './lib/connectToDB';
+
 
 class App {
     public server;
