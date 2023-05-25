@@ -1,5 +1,9 @@
 import express from 'express';
 import morgan from 'morgan';
+import bodyParser from 'body-parser';
+import swaggerUi from 'swagger-ui-express';
+
+import * as swaggerDocument from '../swagger.json';
 
 import routes from './routes';
 import connectToDB from './lib/connectToDB';
@@ -24,7 +28,8 @@ class App {
     }
 
     middlewares() {
-        this.server.use(express.json());
+        this.server.use(bodyParser.json());
+        this.server.use(bodyParser.urlencoded({ extended: true }));
         this.server.use(morgan('dev'));
     }
 
