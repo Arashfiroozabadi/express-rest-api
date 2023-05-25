@@ -25,6 +25,8 @@ class App {
             .catch((err) => {
                 console.error(err);
             });
+
+        this.server.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
     }
 
     middlewares() {
