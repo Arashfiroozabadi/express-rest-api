@@ -8,6 +8,7 @@ import * as swaggerDocument from '../swagger.json';
 import routes from './routes';
 import connectToDB from './lib/connectToDB';
 
+const NODE_ENV = process.env.NODE_ENV;
 
 class App {
     public server;
@@ -26,7 +27,10 @@ class App {
                 console.error(err);
             });
 
-        this.server.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+        if (NODE_ENV === 'dev') {
+            console.log('swagger doc serve on /swagger-doc');
+            this.server.use('/swagger-doc', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+        }
     }
 
     middlewares() {
