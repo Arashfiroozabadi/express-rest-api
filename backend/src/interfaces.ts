@@ -6,13 +6,13 @@ export interface IPost {
     like?: number;
     dislike?: number;
     photo?: string;
-    categories?: ICategory[];
-    tags?: ITag[];
-    author: IUser;
     publishAt?: Date;
     updateAt?: Date;
     createdAt?: Date;
+    author: IUser;
+    categories?: ICategory[];
     comments?: IComment[];
+    tags?: ITag[];
 }
 
 export interface ICategory {
@@ -23,9 +23,16 @@ export interface ICategory {
 }
 
 export interface IUser {
+    _id?: string;
     name: string;
     email: string;
     phone: string;
+    password: string,
+    token?: string;
+    createdAt?: Date
+    updatedAt: Date
+
+    generateAuthToken(): string;
 }
 
 export interface ITag {
@@ -42,11 +49,3 @@ export interface IComment {
     createdAt: Date;
     updatedAt: Date;
 }
-
-// ————————————
-// tags
-// ————————————
-// comments:
-//     like and dislike
-// ————————————
-// media (upload image)
