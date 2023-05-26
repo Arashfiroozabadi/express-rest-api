@@ -4,6 +4,7 @@ import * as yup from 'yup';
 
 import PostModel from '../../model/Post';
 import { IPost } from '../../interfaces';
+import auth from '../../middleware/auth';
 
 const routes = Router();
 
@@ -37,7 +38,7 @@ routes.get('/', async (req, res) => {
 /**
  * create new post by admin users
  */
-routes.post('/', async (req, res) => {
+routes.post('/', auth, async (req, res) => {
     const { body } = req;
 
     const validateBody = await checkPostData(body);
