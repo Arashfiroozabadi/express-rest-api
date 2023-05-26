@@ -3,12 +3,13 @@ import morgan from 'morgan';
 import bodyParser from 'body-parser';
 import swaggerUi from 'swagger-ui-express';
 
-import * as swaggerDocument from '../swagger.json';
+import * as swaggerDocument from './swagger';
 
 import routes from './routes';
 import connectToDB from './lib/connectToDB';
 
 const NODE_ENV = process.env.NODE_ENV;
+const PORT = process.env.PORT;
 
 class App {
     public server;
@@ -28,7 +29,7 @@ class App {
             });
 
         if (NODE_ENV === 'dev') {
-            console.log('swagger doc serve on /swagger-doc');
+            console.log(`swagger doc serve on http://localhost:${PORT}/swagger-doc`);
             this.server.use('/swagger-doc', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
         }
     }

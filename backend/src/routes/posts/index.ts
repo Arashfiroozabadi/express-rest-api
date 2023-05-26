@@ -11,7 +11,7 @@ async function checkPostData(post: IPost): Promise<any> {
         title: yup.string().required('title is required'),
         description: yup.string().required('description is required'),
         abstract: yup.string().required('abstract is required'),
-        author: yup.string().test('valid-object-id', 'Invalid Object ID', (value) => {
+        author: yup.string().test('valid-object-id', 'Invalid Object ID', (value:any) => {
             return ObjectId.isValid(value);
         })
     });
