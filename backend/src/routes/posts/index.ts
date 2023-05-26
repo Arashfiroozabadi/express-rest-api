@@ -4,14 +4,15 @@ import * as yup from 'yup';
 
 import PostModel from '../../model/Post';
 import { IPost } from '../../interfaces';
+
 const routes = Router();
 
-async function checkPostData(post: IPost): Promise<any> {
+async function checkPostData(post: IPost) {
     const validationSchema = yup.object({
         title: yup.string().required('title is required'),
         description: yup.string().required('description is required'),
         abstract: yup.string().required('abstract is required'),
-        author: yup.string().test('valid-object-id', 'Invalid Object ID', (value:any) => {
+        author: yup.string().test('valid-object-id', 'Invalid Object ID', (value: any) => {
             return ObjectId.isValid(value);
         })
     });
@@ -33,13 +34,15 @@ routes.get('/', async (req, res) => {
     return res.status(200).send({ posts });
 });
 
-
+/**
+ * create new post by admin users
+ */
 routes.post('/', async (req, res) => {
     const { body } = req;
 
     const validateBody = await checkPostData(body);
     // send error response
-    if (validateBody.err) return res.status(400).send({ msg: validateBody.msg });
+    if ('err' in validateBody) return res.status(400).send({ msg: validateBody.msg });
 
     const newPost = new PostModel({ body });
 
