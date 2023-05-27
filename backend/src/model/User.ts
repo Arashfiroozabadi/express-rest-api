@@ -29,7 +29,7 @@ const user = new Schema<IUser>(
 );
 
 user.methods.generateAuthToken = async function() {
-    const expiresIn = '20m';
+    const expiresIn = '5day';
     const user = this;
     const token = jwt.sign({ _id: user._id }, JWT_KEY, { expiresIn });
     user.token = token;
