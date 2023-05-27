@@ -18,13 +18,16 @@ const post = new Schema<IPost>(
             default: null
         },
         readingTime: {
-            type: Number
+            type: Number,
+            default: 0
         },
         like: {
-            type: Number
+            type: Number,
+            default: 0
         },
         dislike: {
-            type: Number
+            type: Number,
+            default: 0
         },
         publishAt: {
             type: Date
