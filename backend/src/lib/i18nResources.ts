@@ -8,6 +8,11 @@ export const notAuth = 'notAuth';
 export const userNotFound = 'userNotFound';
 export const invalidPass = 'invalidPass';
 export const logout = 'logout';
+export const requirePostTitle = 'requirePostTitle';
+export const requireID = 'requireID';
+export const requireDesc = 'requireDesc';
+export const requireAbstract = 'requireAbstract';
+export const notFound = 'notFound';
 
 const i18nResources = {
     fa: {
@@ -24,6 +29,11 @@ const i18nResources = {
             userNotFound: 'کاربر یافت نشد',
             invalidPass: 'رمزعبور صحیح نیست',
             logout: 'خروج از حساب کاربری انجام شد',
+            requirePostTitle: 'عنوان اجباری است',
+            requireID: 'شناسه اجباری است',
+            requireDesc: 'توضیحات اجباری است',
+            requireAbstract: 'خلاصه اجباری است',
+            notFound: 'یافت نشد'
         }
     },
     en: {
@@ -40,6 +50,11 @@ const i18nResources = {
             userNotFound: 'user not found',
             invalidPass: 'password is not correct',
             logout: 'The user account has been logged out',
+            requirePostTitle: 'title is required',
+            requireID: 'ID is required',
+            requireDesc: 'description is required',
+            requireAbstract: 'abstract is required',
+            notFound: 'not found'
         }
     }
 };
