@@ -6,7 +6,7 @@ import auth from '../../middleware/auth';
 import hashPass from '../../lib/hashPass';
 import { checkNewUserData, checkUserLoginData } from './validations';
 import handleErrors from '../../lib/handleErrors';
-import { invalidPass, userNotFound } from '../../lib/i18nResources';
+import { invalidPass, logout, userNotFound } from '../../lib/i18nResources';
 import bcrypt from 'bcrypt';
 
 const routes = Router();
@@ -96,6 +96,15 @@ routes.post('/login', async (req, res) => {
         handleErrors(err, req, res);
     }
 });
+
+routes.post('/logout', auth, async (req, res) => {
+    req.user.token = undefined;
+    const user = req.user;
+    await user.save();
+
+    res.status(201).send({ msg: req.t(logout) });
+});
+
 
 
 export default routes;

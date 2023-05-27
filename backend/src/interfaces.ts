@@ -33,6 +33,8 @@ export interface IUser {
     updatedAt: Date
 
     generateAuthToken(): string;
+
+    save(): void
 }
 
 export interface ITag {

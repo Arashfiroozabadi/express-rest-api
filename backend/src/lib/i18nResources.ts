@@ -6,6 +6,7 @@ export const requireEmail = 'requireEmail';
 export const notAuth = 'notAuth';
 export const userNotFound = 'userNotFound';
 export const invalidPass = 'invalidPass';
+export const logout = 'logout';
 
 const i18nResources = {
     fa: {
@@ -18,7 +19,8 @@ const i18nResources = {
             invalidEmail: 'ایمیل صحیح نیست',
             notAuth: 'کاربر احراز هویت نشد',
             userNotFound: 'کاربر یافت نشد',
-            invalidPass: 'رمزعبور صحیح نیست'
+            invalidPass: 'رمزعبور صحیح نیست',
+            logout: 'خروج از حساب کاربری انجام شد',
         }
     },
     en: {
@@ -31,7 +33,8 @@ const i18nResources = {
             invalidEmail: 'email is invalid',
             notAuth: 'user not authorized',
             userNotFound: 'user not found',
-            invalidPass: 'password is not correct'
+            invalidPass: 'password is not correct',
+            logout: 'The user account has been logged out',
         }
     }
 };
