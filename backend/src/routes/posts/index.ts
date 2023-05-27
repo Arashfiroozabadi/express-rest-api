@@ -1,53 +1,95 @@
 import { Router } from 'express';
-import { ObjectId } from 'bson';
-import * as yup from 'yup';
 
 import PostModel from '../../model/Post';
-import { IPost } from '../../interfaces';
 import auth from '../../middleware/auth';
+import { checkPostData } from './validations';
+import handleErrors from '../../lib/handleErrors';
+import checkObjectId from '../../lib/checkObjectId';
+import { notFound } from '../../lib/i18nResources';
+import CategoryModel from '../../model/Category';
+import TagModel from '../../model/Tag';
+
 
 const routes = Router();
 
-async function checkPostData(post: IPost) {
-    const validationSchema = yup.object({
-        title: yup.string().required('title is required'),
-        description: yup.string().required('description is required'),
-        abstract: yup.string().required('abstract is required'),
-        author: yup.string().test('valid-object-id', 'Invalid Object ID', (value: any) => {
-            return ObjectId.isValid(value);
-        })
-    });
-    return validationSchema.validate(post)
-        .then(result => result)
-        .catch(err => {
-            return {
-                err: true,
-                msg: err.errors.join(', ')
-            };
-        });
-}
 
 /**
  * Retrieve all posts from the database
  */
 routes.get('/', async (req, res) => {
-    const posts = await PostModel.find();
-    return res.status(200).send({ posts });
+    try {
+        // todo :: need to clear after create router for category and tag
+        await CategoryModel.find();
+        await TagModel.find();
+        const posts = await PostModel
+            .find()
+            .populate([
+                { path: 'author', select: 'name' },
+                { path: 'categories', select: 'title' },
+                { path: 'tags', select: 'title' },
+            ])
+            .select('-description -comments')
+            .sort({ createdAt: -1 });
+
+        return res.status(200).send(posts);
+    } catch (err) {
+        handleErrors(err, req, res);
+    }
+});
+
+/**
+ * get post by id
+ */
+routes.get('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = checkObjectId(id, req.t);
+
+        // send error response
+        if (result.err) return res.status(400).send({ msg: result.msg });
+
+        // query on db
+        const post = await PostModel
+            .findById(result.id)
+            .populate([
+                { path: 'author', select: 'name' },
+                { path: 'categories', select: 'title' },
+                { path: 'tags', select: 'title' }
+            ]);
+
+        // send error response
+        if (!post) return res.status(404).send({ msg: req.t(notFound) });
+
+        console.log(post);
+        return res.status(200).send(post);
+    } catch (err) {
+        handleErrors(err, req, res);
+    }
 });
 
 /**
  * create new post by admin users
  */
 routes.post('/', auth, async (req, res) => {
-    const { body } = req;
+    try {
+        const { body } = req;
 
-    const validateBody = await checkPostData(body);
-    // send error response
-    if ('err' in validateBody) return res.status(400).send({ msg: validateBody.msg });
+        const validateBody = await checkPostData(body, req.t);
+        // send error response
+        if ('err' in validateBody) return res.status(400).send({ msg: validateBody.msg });
 
-    const newPost = new PostModel({ body });
+        const newPost = new PostModel({
+            title: body.title,
+            description: body.description,
+            abstract: body.abstract,
+            author: req.user._id
+        });
+        await newPost.save();
 
-    return res.status(201).send({ _id: newPost._id });
+        return res.status(201).send({ _id: newPost._id });
+    } catch (err) {
+        handleErrors(err, req, res);
+    }
 });
 
 
