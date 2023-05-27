@@ -1,12 +1,22 @@
 import * as yup from 'yup';
 import { IUser } from '../../interfaces';
-import { requireEmail, requireName, requirePass, requirePhone, validEmail } from '../../lib/i18nResources';
+import {
+    invalidPhone,
+    requireEmail,
+    requireName,
+    requirePass,
+    requirePhone,
+    validEmail
+} from '../../lib/i18nResources';
+import irPhoneRegExp from '../../lib/irPhoneRegExp';
 
 export async function checkNewUserData(post: IUser, i18nTra: (val: string) => string) {
     const validationSchema = yup.object({
         name: yup.string().required(i18nTra(requireName)),
         password: yup.string().required(i18nTra(requirePass)),
-        phone: yup.string().required(i18nTra(requirePhone)),
+        phone: yup.string()
+            .matches(irPhoneRegExp, i18nTra(invalidPhone))
+            .required(i18nTra(requirePhone)),
         email: yup.string().email(i18nTra(validEmail)).required(i18nTra(requireEmail))
     });
     return validationSchema.validate(post, { abortEarly: false })
