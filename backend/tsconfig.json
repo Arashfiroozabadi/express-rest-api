@@ -1,20 +1,35 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "esModuleInterop": true,
-    "target": "es6",
+    "target": "es2020",
+    "module": "es2020",
+    "allowJs": true,
+    "removeComments": true,
     "noImplicitAny": true,
-    "moduleResolution": "node",
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
     "sourceMap": true,
+    "strict": true,
+    "lib": [
+      "es2020"
+    ],
+    "forceConsistentCasingInFileNames": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "moduleResolution": "Node",
+    "skipLibCheck": true,
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "@lib/*": ["lib/*"],
-      "@interfaces": ["src/interfaces.ts"],
+      "*": [
+        "node_modules/*"
+      ]
     }
   },
   "include": [
-    "index.d.ts",
+    "src/index.d.ts",
     "src/**/*"
   ],
   "exclude": [
