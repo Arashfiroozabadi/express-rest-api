@@ -8,6 +8,7 @@ import { checkNewUserData, checkUserLoginData } from './validations';
 import handleErrors from '../../lib/handleErrors';
 import { invalidPass, logout, userNotFound } from '../../lib/i18nResources';
 import bcrypt from 'bcrypt';
+import convertPhoneNumber from '../../lib/convertPhoneNumber';
 
 const routes = Router();
 
@@ -33,11 +34,12 @@ routes.post('/', async (req, res) => {
     if ('err' in validateBody) return res.status(400).send({ msg: validateBody.msg });
 
     try {
+        const phone = convertPhoneNumber(body.phone);
         // create new user
         const newUser = new UserModel({
             name: body.name.toLowerCase(),
             email: body.email,
-            phone: body.phone,
+            phone,
             password: await hashPass(body.password)
         });
         await newUser.save();
@@ -68,7 +70,7 @@ routes.post('/login', async (req, res) => {
         // send error response
         if ('err' in validateBody) return res.status(400).send({ msg: validateBody.msg });
 
-        const filter = { phone: body.phone };
+        const filter = { phone: convertPhoneNumber(body.phone) };
         const user = await UserModel.findOne(filter);
 
         // send error response
@@ -104,7 +106,5 @@ routes.post('/logout', auth, async (req, res) => {
 
     res.status(201).send({ msg: req.t(logout) });
 });
-
-
 
 export default routes;
