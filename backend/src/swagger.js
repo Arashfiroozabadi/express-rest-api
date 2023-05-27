@@ -149,7 +149,7 @@ module.exports = {
                             }
                         }
                     },
-                    401:{
+                    401: {
                         '$ref': '#/components/responses/Unauthorized'
                     },
                     500: {
@@ -171,7 +171,10 @@ module.exports = {
                         'content': {
                             'application/json': {
                                 'schema': {
-                                    '$ref': '#/components/schemas/Post'
+                                    type: 'array',
+                                    items: {
+                                        '$ref': '#/components/schemas/Post'
+                                    }
                                 }
                             }
                         }
@@ -194,16 +197,10 @@ module.exports = {
                     }
                 ],
                 'requestBody': {
-                    'content': {
-                        'application/json': {
-                            'schema': {
-                                '$ref': '#/components/schemas/Post'
-                            }
-                        }
-                    }
+                    '$ref': '#/components/requestBodies/newPost'
                 },
                 'responses': {
-                    '200': {
+                    201: {
                         'description': 'post ID',
                         'content': {
                             'application/json': {
@@ -219,32 +216,58 @@ module.exports = {
                             }
                         }
                     },
-                    '400': {
-                        'description': 'invalid request body value',
-                        'content': {
-                            'application/json': {
-                                'schema': {
-                                    'type': 'object',
-                                    'properties': {
-                                        'msg': {
-                                            'type': 'string',
-                                            'example': 'title is required'
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                    400: {
+                        '$ref': '#/components/responses/invalidDataForCreateNewPost'
                     },
-                    '500': {
+                    401: {
+                        '$ref': '#/components/responses/Unauthorized'
+                    },
+                    500: {
                         '$ref': '#/components/responses/500'
                     }
                 }
             }
+        },
+        '/api/posts/{_id}': {
+            'get': {
+                tags: ['Posts'],
+                'summary': 'Find post by ID',
+                'description': 'Returns a single Post',
+                'operationId': 'getPostById',
+                'parameters': [
+                    {
+                        'name': '_id',
+                        'in': 'path',
+                        'description': 'ID of Post to return',
+                        'required': true,
+                        'schema': {
+                            'type': 'string',
+                            'pattern': '^[a-zA-Z0-9]{24}$',
+                            'format': 'bson-objectid'
+                        }
+                    }
+                ],
+                'responses': {
+                    200: {
+                        '$ref': '#/components/responses/getPostByIdResponse'
+                    },
+                    400: {
+                        '$ref': '#/components/responses/requiredID'
+                    },
+                    404: {
+                        '$ref': '#/components/responses/notFound'
+                    },
+                    500: {
+                        '$ref': '#/components/responses/500'
+                    }
+                }
+            }
+
         }
     },
     'components': {
         'schemas': {
-            'User': {
+            User: {
                 'required': [
                     'name',
                     'email',
@@ -255,6 +278,7 @@ module.exports = {
                 'properties': {
                     '_id': {
                         'type': 'string',
+                        'description': 'objectId created by mongodb',
                         'example': '6467fca11dba2e8cac1130ed'
                     },
                     'name': {
@@ -287,7 +311,7 @@ module.exports = {
                     }
                 }
             },
-            'Post': {
+            Post: {
                 'required': [
                     'title',
                     'description',
@@ -296,6 +320,11 @@ module.exports = {
                 ],
                 'type': 'object',
                 'properties': {
+                    '_id': {
+                        'type': 'string',
+                        'description': 'objectId created by mongodb',
+                        'example': '6467fca11dba2e8cac1130ed'
+                    },
                     'title': {
                         'type': 'string',
                         'example': 'the best post'
@@ -307,6 +336,10 @@ module.exports = {
                     'abstract': {
                         'type': 'string',
                         'example': 'the best abstract'
+                    },
+                    'author': {
+                        'type': 'string',
+                        'example': '6467fca11dba2e8cac1130ed'
                     },
                     'readingTime': {
                         'type': 'number',
@@ -336,10 +369,6 @@ module.exports = {
                         'type': 'Date',
                         'example': '2022-02-20T07:32:39.656+00:00'
                     },
-                    'author': {
-                        'type': 'string',
-                        'example': '6467fca11dba2e8cac1130ed'
-                    },
                     'categories': {
                         'type': 'array',
                         'items': {
@@ -359,10 +388,165 @@ module.exports = {
                         }
                     }
                 }
+            },
+            Category: {
+                'required': [
+                    'title'
+                ],
+                'type': 'object',
+                'properties': {
+                    '_id': {
+                        'type': 'string',
+                        'description': 'objectId created by mongodb',
+                        'example': '6467fca11dba2e8cac1130ed'
+                    },
+                    'title': {
+                        'type': 'string',
+                        'example': 'star'
+                    },
+                    'subCategories': {
+                        'type': 'array',
+                        'items': {
+                            '$ref': '#/components/schemas/Category'
+                        }
+                    },
+                    'updateAt': {
+                        'type': 'Date',
+                        'example': '2022-02-20T07:32:39.656+00:00'
+                    },
+                    'createdAt': {
+                        'type': 'Date',
+                        'example': '2022-02-20T07:32:39.656+00:00'
+                    }
+                }
+            },
+            Tag: {
+                'required': [
+                    'title'
+                ],
+                'type': 'object',
+                'properties': {
+                    '_id': {
+                        'type': 'string',
+                        'description': 'objectId created by mongodb',
+                        'example': '6467fca11dba2e8cac1130ed'
+                    },
+                    'title': {
+                        'type': 'string',
+                        'example': 'dark'
+                    },
+                    'updateAt': {
+                        'type': 'Date',
+                        'example': '2022-02-20T07:32:39.656+00:00'
+                    },
+                    'createdAt': {
+                        'type': 'Date',
+                        'example': '2022-02-20T07:32:39.656+00:00'
+                    }
+                }
+            },
+            Comment: {
+                'required': [
+                    'msg',
+                    'author'
+                ],
+                'type': 'object',
+                'properties': {
+                    '_id': {
+                        'type': 'string',
+                        'description': 'objectId created by mongodb',
+                        'example': '6467fca11dba2e8cac1130ed'
+                    },
+                    author: {
+                        'type': 'string',
+                        'example': '6467fca11dba2e8cac1130ed'
+                    },
+                    msg: {
+                        'type': 'string',
+                        'example': 'banana'
+                    },
+                    like: {
+                        type: 'number',
+                        example: 10
+                    },
+                    dislike: {
+                        type: 'number',
+                        example: 2
+                    },
+
+                    'updateAt': {
+                        'type': 'Date',
+                        'example': '2022-02-20T07:32:39.656+00:00'
+                    },
+                    'createdAt': {
+                        'type': 'Date',
+                        'example': '2022-02-20T07:32:39.656+00:00'
+                    }
+                }
             }
         },
         'requestBodies': {
-            'LoginUser': {
+            newPost: {
+                'required': true,
+                'description': 'Post object for store in database',
+                'content': {
+                    'application/json': {
+                        'schema': {
+                            'required': [
+                                'title',
+                                'description',
+                                'abstract'
+                            ],
+                            'type': 'object',
+                            'properties': {
+                                'title': {
+                                    'type': 'string',
+                                    'example': 'the best post'
+                                },
+                                'description': {
+                                    'type': 'string',
+                                    'example': 'the best post description you can write'
+                                },
+                                'abstract': {
+                                    'type': 'string',
+                                    'example': 'the best abstract'
+                                },
+                                'readingTime': {
+                                    'type': 'number',
+                                    'example': 10
+                                },
+                                'photo': {
+                                    'type': 'string',
+                                    'example': 'http://someimageurl.png'
+                                },
+                                'categories': {
+                                    'type': 'array',
+                                    'items': {
+                                        'oneOf': [
+                                            { example: 'star' },
+                                            { example: 'moon' }
+                                        ]
+                                    }
+                                },
+                                'tags': {
+                                    'items': {
+                                        'oneOf': [
+                                            { example: 'dark' },
+                                            { example: 'lion' }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    'application/x-www-form-urlencoded': {
+                        'schema': {
+                            '$ref': '#/components/schemas/Post'
+                        }
+                    }
+                }
+            },
+            LoginUser: {
                 'required': true,
                 'description': 'User object that needs to login user',
                 'content': {
@@ -388,7 +572,7 @@ module.exports = {
                     }
                 }
             },
-            'User': {
+            User: {
                 'required': true,
                 'description': 'User object that needs to be added to the database',
                 'content': {
@@ -421,10 +605,15 @@ module.exports = {
                             }
 
                         }
+                    },
+                    'application/x-www-form-urlencoded': {
+                        'schema': {
+                            '$ref': '#/components/schemas/User'
+                        }
                     }
                 }
             },
-            'Post': {
+            Post: {
                 'description': 'Post object that needs to be added to the database',
                 'content': {
                     'application/json': {
@@ -436,7 +625,92 @@ module.exports = {
             }
         },
         'responses': {
-            'userResponse': {
+            getPostByIdResponse: {
+                'description': 'response of get post by id',
+                'content': {
+                    'application/json': {
+                        'schema': {
+                            'type': 'object',
+                            'properties': {
+                                '_id': {
+                                    'type': 'string',
+                                    'description': 'objectId created by mongodb',
+                                    'example': '6467fca11dba2e8cac1130ed'
+                                },
+                                'title': {
+                                    'type': 'string',
+                                    'example': 'the best post'
+                                },
+                                'description': {
+                                    'type': 'string',
+                                    'example': 'the best post description you can write'
+                                },
+                                'abstract': {
+                                    'type': 'string',
+                                    'example': 'the best abstract'
+                                },
+                                'author': {
+                                    'type': 'string',
+                                    'example': '6467fca11dba2e8cac1130ed'
+                                },
+                                'readingTime': {
+                                    'type': 'number',
+                                    'example': 10
+                                },
+                                'like': {
+                                    'type': 'number',
+                                    'example': 10
+                                },
+                                'dislike': {
+                                    'type': 'number',
+                                    'example': 3
+                                },
+                                'photo': {
+                                    'type': 'string',
+                                    'example': 'http://someimageurl.png'
+                                },
+                                'publishAt': {
+                                    'type': 'Date',
+                                    'example': '2022-02-20T07:32:39.656+00:00'
+                                },
+                                'updateAt': {
+                                    'type': 'Date',
+                                    'example': '2022-02-20T07:32:39.656+00:00'
+                                },
+                                'createdAt': {
+                                    'type': 'Date',
+                                    'example': '2022-02-20T07:32:39.656+00:00'
+                                },
+                                'categories': {
+                                    'type': 'array',
+                                    'items': {
+                                        'oneOf': [
+                                            { example: 'star' },
+                                            { example: 'moon' }
+                                        ]
+                                    }
+                                },
+                                'comments': {
+                                    'type': 'array',
+                                    'items': {
+                                        '$ref': '#/components/schemas/Comment'
+                                    }
+                                },
+                                'tags': {
+                                    'type': 'array',
+                                    'items': {
+                                        'oneOf': [
+                                            { example: 'dark' },
+                                            { example: 'lion' }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            userResponse: {
                 'description': 'user response data',
                 'content': {
                     'application/json': {
@@ -476,7 +750,7 @@ module.exports = {
                     }
                 }
             },
-            'Unauthorized': {
+            Unauthorized: {
                 'description': 'Unauthorized user',
                 'content': {
                     'application/json': {
@@ -492,7 +766,7 @@ module.exports = {
                     }
                 }
             },
-            'invalidDataForCreateNewUser': {
+            invalidDataForCreateNewUser: {
                 'description': 'invalid user required data',
                 'content': {
                     'application/json': {
@@ -518,7 +792,24 @@ module.exports = {
                     }
                 }
             },
-            'invalidDataForLoginUser': {
+            invalidDataForCreateNewPost: {
+                'description': 'invalid post required data',
+                'content': {
+                    'application/json': {
+                        'schema': {
+                            'type': 'array',
+                            'items': {
+                                'oneOf': [
+                                    { example: 'title is required' },
+                                    { example: 'description is required' },
+                                    { example: 'abstract number is required' }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            invalidDataForLoginUser: {
                 'description': 'invalid user required data',
                 'content': {
                     'application/json': {
@@ -534,7 +825,7 @@ module.exports = {
                     }
                 }
             },
-            'userNotFound': {
+            userNotFound: {
                 'description': 'user not found on data base',
                 'content': {
                     'application/json': {
@@ -550,7 +841,39 @@ module.exports = {
                     }
                 }
             },
-            '500': {
+            notFound: {
+                'description': 'not found on data base',
+                'content': {
+                    'application/json': {
+                        'schema': {
+                            'type': 'object',
+                            'properties': {
+                                'msg': {
+                                    'type': 'string',
+                                    'example': 'not found'
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            requiredID: {
+                'description': 'id is required to find data by id on database',
+                'content': {
+                    'application/json': {
+                        'schema': {
+                            'type': 'object',
+                            'properties': {
+                                'msg': {
+                                    'type': 'string',
+                                    'example': 'id is required'
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            500: {
                 'description': 'Unexpected error',
                 'content': {
                     'application/json': {
