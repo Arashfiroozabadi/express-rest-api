@@ -123,6 +123,41 @@ module.exports = {
                 }
             }
         },
+        '/api/users/logout': {
+            'post': {
+                'tags': ['Users'],
+                'summary': 'logout user',
+                'description': 'logout user by remove user token',
+                'security': [
+                    {
+                        'bearerAuth': []
+                    }
+                ],
+                'responses': {
+                    201: {
+                        'content': {
+                            'application/json': {
+                                'schema': {
+                                    'type': 'object',
+                                    'properties': {
+                                        'msg': {
+                                            'type': 'string',
+                                            'example': 'The user account has been logged out'
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    401:{
+                        '$ref': '#/components/responses/Unauthorized'
+                    },
+                    500: {
+                        '$ref': '#/components/responses/500'
+                    }
+                }
+            }
+        },
         '/api/posts': {
             'get': {
                 'tags': [
