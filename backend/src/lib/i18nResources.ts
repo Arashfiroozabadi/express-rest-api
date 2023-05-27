@@ -13,6 +13,7 @@ const i18nResources = {
     fa: {
         translation: {
             '11000': 'داده مورد نظر تکراری است',
+            'TokenExpiredError': 'اعتبار احراز هویت شما منقضی شده',
             requireName: 'نام اجباری است',
             requirePass: 'رمزعبور اجباری است',
             requirePhone: 'شماره تلفن همراه اجباری است',
@@ -28,6 +29,7 @@ const i18nResources = {
     en: {
         translation: {
             '11000': 'value for this field is duplicated',
+            'TokenExpiredError': 'auth token is expired',
             requireName: 'name is required',
             requirePass: 'password is required',
             requirePhone: 'phone number is required',
