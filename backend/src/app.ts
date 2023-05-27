@@ -26,22 +26,21 @@ class App {
     constructor() {
         this.server = express();
 
-        this.middlewares();
-        this.routes();
-
         connectToDB
             .then(() => {
                 console.log('db connected');
             })
             .catch((err) => {
-                console.error(err);
+                throw err;
             });
+
+        this.middlewares();
+        this.routes();
 
         if (NODE_ENV === 'dev') {
             console.log(`swagger doc serve on http://localhost:${PORT}/swagger-doc`);
             this.server.use('/swagger-doc', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
         }
-
 
     }
 
@@ -53,7 +52,7 @@ class App {
             .use(i18nextMiddleware.LanguageDetector)
             .use(FilesystemBackend)
             .use(sprintf)
-            .init(i18nOptions);
+            .init(i18nOptions).then();
 
         this.server.use(i18nextMiddleware.handle(i18next, { removeLngFromUrl: false }));
 
