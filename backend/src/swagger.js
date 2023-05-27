@@ -503,6 +503,7 @@ module.exports = {
                                     { example: 'name is required' },
                                     { example: 'password is required' },
                                     { example: 'phone number is required' },
+                                    { example: 'phone number is not valid' },
                                     { example: 'email is required' },
                                     { example: 'email is invalid' },
                                     {
