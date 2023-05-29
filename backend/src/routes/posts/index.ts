@@ -131,7 +131,34 @@ routes.put('/:id', auth, async (req, res) => {
         post.status = body.status;
         await post.save();
 
-        return res.status(200).send({ msg: 'ok' });
+        return res.status(201).send({ msg: 'ok' });
+    } catch (err) {
+        handleErrors(err, req, res);
+    }
+});
+
+/**
+ * delete post by id
+ */
+routes.delete('/:id', auth, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const result = checkObjectId(id, req.t);
+
+        // send error response
+        if (result.err) return res.status(400).send({ msg: result.msg });
+
+        // query to find post
+        const post = await PostModel.findById(result.id);
+
+        // send error response
+        if (!post) return res.status(404).send({ msg: req.t(notFound) });
+        if (post.author + '' !== req.user._id + '') return res.status(403).send({ msg: req.t(accessDenied) });
+
+        // query to delete post
+        await PostModel.findByIdAndDelete(id);
+
+        return res.status(201).send({ msg: 'ok' });
     } catch (err) {
         handleErrors(err, req, res);
     }
