@@ -6,8 +6,6 @@ import { checkPostData } from './validations';
 import handleErrors from '../../lib/handleErrors';
 import checkObjectId from '../../lib/checkObjectId';
 import { accessDenied, notFound } from '../../lib/i18nResources';
-import CategoryModel from '../../model/Category';
-import TagModel from '../../model/Tag';
 
 
 const routes = Router();
@@ -18,9 +16,6 @@ const routes = Router();
  */
 routes.get('/', async (req, res) => {
     try {
-        // todo :: need to clear after create router for category and tag
-        await CategoryModel.find();
-        await TagModel.find();
         const posts = await PostModel
             .find()
             .populate([
@@ -60,7 +55,6 @@ routes.get('/:id', async (req, res) => {
         // send error response
         if (!post) return res.status(404).send({ msg: req.t(notFound) });
 
-        console.log(post);
         return res.status(200).send(post);
     } catch (err) {
         handleErrors(err, req, res);

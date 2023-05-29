@@ -18,7 +18,6 @@ export interface IPost {
 
 export interface ICategory {
     title: string;
-    subCategories?: ICategory[];
     createdAt?: Date;
     updateAt?: Date;
 }

@@ -6,11 +6,9 @@ import {
     requireTitle
 } from '../../lib/i18nResources';
 
-export async function checkPostData(post: IPost, i18nTra: (val: string) => string) {
+export async function checkCategoryData(post: IPost, i18nTra: (val: string) => string) {
     const validationSchema = yup.object({
-        title: yup.string().required(i18nTra(requireTitle)),
-        description: yup.string().required(i18nTra(requireDesc)),
-        abstract: yup.string().required(i18nTra(requireAbstract))
+        title: yup.string().required(i18nTra(requireTitle))
     });
     return validationSchema.validate(post, { abortEarly: false })
         .then(result => result)
