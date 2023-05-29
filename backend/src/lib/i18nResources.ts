@@ -13,6 +13,7 @@ export const requireID = 'requireID';
 export const requireDesc = 'requireDesc';
 export const requireAbstract = 'requireAbstract';
 export const notFound = 'notFound';
+export const accessDenied = 'accessDenied';
 
 const i18nResources = {
     fa: {
@@ -33,7 +34,8 @@ const i18nResources = {
             requireID: 'شناسه اجباری است',
             requireDesc: 'توضیحات اجباری است',
             requireAbstract: 'خلاصه اجباری است',
-            notFound: 'یافت نشد'
+            notFound: 'یافت نشد',
+            accessDenied: 'دسترسی شما مجاز نیست'
         }
     },
     en: {
@@ -54,7 +56,8 @@ const i18nResources = {
             requireID: 'ID is required',
             requireDesc: 'description is required',
             requireAbstract: 'abstract is required',
-            notFound: 'not found'
+            notFound: 'not found',
+            accessDenied: 'access denied'
         }
     }
 };
