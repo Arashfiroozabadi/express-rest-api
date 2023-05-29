@@ -75,7 +75,7 @@ module.exports = {
                         '$ref': '#/components/responses/userResponse'
                     },
                     '401': {
-                        '$ref': '#/components/responses/Unauthorized'
+                        '$ref': '#/components/responses/unauthorized'
                     },
                     '500': {
                         '$ref': '#/components/responses/500'
@@ -150,7 +150,7 @@ module.exports = {
                         }
                     },
                     401: {
-                        '$ref': '#/components/responses/Unauthorized'
+                        '$ref': '#/components/responses/unauthorized'
                     },
                     500: {
                         '$ref': '#/components/responses/500'
@@ -220,7 +220,7 @@ module.exports = {
                         '$ref': '#/components/responses/invalidDataForCreateNewPost'
                     },
                     401: {
-                        '$ref': '#/components/responses/Unauthorized'
+                        '$ref': '#/components/responses/unauthorized'
                     },
                     500: {
                         '$ref': '#/components/responses/500'
@@ -266,6 +266,11 @@ module.exports = {
                 tags: ['Posts'],
                 'summary': 'update post by ID',
                 'operationId': 'updatePostById',
+                'security': [
+                    {
+                        'bearerAuth': []
+                    }
+                ],
                 'parameters': [
                     {
                         'name': '_id',
@@ -287,7 +292,13 @@ module.exports = {
                         '$ref': '#/components/responses/ok'
                     },
                     400: {
-                        '$ref': '#/components/responses/requiredID'
+                        '$ref': '#/components/responses/invalidDataForUpdatePost',
+                    },
+                    401: {
+                        '$ref': '#/components/responses/unauthorized'
+                    },
+                    403: {
+                        '$ref': '#/components/responses/accessDenied'
                     },
                     404: {
                         '$ref': '#/components/responses/notFound'
@@ -875,8 +886,8 @@ module.exports = {
                     }
                 }
             },
-            Unauthorized: {
-                'description': 'Unauthorized user',
+            unauthorized: {
+                'description': 'unauthorized user',
                 'content': {
                     'application/json': {
                         'schema': {
@@ -885,6 +896,22 @@ module.exports = {
                                 'msg': {
                                     'type': 'string',
                                     'example': 'user not authorized'
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            accessDenied: {
+                'description': 'access denied',
+                'content': {
+                    'application/json': {
+                        'schema': {
+                            'type': 'object',
+                            'properties': {
+                                'msg': {
+                                    'type': 'string',
+                                    'example': 'access denied'
                                 }
                             }
                         }
@@ -928,6 +955,24 @@ module.exports = {
                                     { example: 'title is required' },
                                     { example: 'description is required' },
                                     { example: 'abstract number is required' }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            invalidDataForUpdatePost: {
+                'description': 'invalid post required data',
+                'content': {
+                    'application/json': {
+                        'schema': {
+                            'type': 'array',
+                            'items': {
+                                'oneOf': [
+                                    { example: 'title is required' },
+                                    { example: 'description is required' },
+                                    { example: 'abstract number is required' },
+                                    { example: 'id is required' },
                                 ]
                             }
                         }
