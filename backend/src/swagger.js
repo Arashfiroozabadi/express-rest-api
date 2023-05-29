@@ -307,7 +307,50 @@ module.exports = {
                         '$ref': '#/components/responses/500'
                     }
                 }
-            }
+            },
+            'delete': {
+                tags: ['Posts'],
+                'summary': 'delete post by ID',
+                'operationId': 'deletePostById',
+                'security': [
+                    {
+                        'bearerAuth': []
+                    }
+                ],
+                'parameters': [
+                    {
+                        'name': '_id',
+                        'in': 'path',
+                        'description': 'ID of Post',
+                        'required': true,
+                        'schema': {
+                            'type': 'string',
+                            'pattern': '^[a-zA-Z0-9]{24}$',
+                            'format': 'bson-objectid'
+                        }
+                    }
+                ],
+                'responses': {
+                    201: {
+                        '$ref': '#/components/responses/ok'
+                    },
+                    400: {
+                        '$ref': '#/components/responses/requiredID',
+                    },
+                    401: {
+                        '$ref': '#/components/responses/unauthorized'
+                    },
+                    403: {
+                        '$ref': '#/components/responses/accessDenied'
+                    },
+                    404: {
+                        '$ref': '#/components/responses/notFound'
+                    },
+                    500: {
+                        '$ref': '#/components/responses/500'
+                    }
+                }
+            },
         }
     },
     'components': {
