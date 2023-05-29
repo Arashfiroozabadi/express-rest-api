@@ -261,8 +261,42 @@ module.exports = {
                         '$ref': '#/components/responses/500'
                     }
                 }
+            },
+            'put': {
+                tags: ['Posts'],
+                'summary': 'update post by ID',
+                'operationId': 'updatePostById',
+                'parameters': [
+                    {
+                        'name': '_id',
+                        'in': 'path',
+                        'description': 'ID of Post',
+                        'required': true,
+                        'schema': {
+                            'type': 'string',
+                            'pattern': '^[a-zA-Z0-9]{24}$',
+                            'format': 'bson-objectid'
+                        }
+                    }
+                ],
+                'requestBody': {
+                    '$ref': '#/components/requestBodies/updatePost'
+                },
+                'responses': {
+                    200: {
+                        '$ref': '#/components/responses/ok'
+                    },
+                    400: {
+                        '$ref': '#/components/responses/requiredID'
+                    },
+                    404: {
+                        '$ref': '#/components/responses/notFound'
+                    },
+                    500: {
+                        '$ref': '#/components/responses/500'
+                    }
+                }
             }
-
         }
     },
     'components': {
@@ -356,6 +390,11 @@ module.exports = {
                     'photo': {
                         'type': 'string',
                         'example': 'http://someimageurl.png'
+                    },
+                    'status': {
+                        'type': 'string',
+                        'example': 'DRAFT',
+                        'enum': ['DRAFT', 'PUBLISH', 'ARCHIVE']
                     },
                     'publishAt': {
                         'type': 'Date',
@@ -486,6 +525,71 @@ module.exports = {
             }
         },
         'requestBodies': {
+            updatePost: {
+                'required': true,
+                'description': 'object data for update post',
+                'content': {
+                    'application/json': {
+                        'schema': {
+                            'required': [
+                                'title',
+                                'description',
+                                'abstract'
+                            ],
+                            'type': 'object',
+                            'properties': {
+                                'title': {
+                                    'type': 'string',
+                                    'example': 'change title'
+                                },
+                                'description': {
+                                    'type': 'string',
+                                    'example': 'the best post description you can change'
+                                },
+                                'abstract': {
+                                    'type': 'string',
+                                    'example': 'the best abstract'
+                                },
+                                'readingTime': {
+                                    'type': 'number',
+                                    'example': 10
+                                },
+                                'photo': {
+                                    'type': 'string',
+                                    'example': 'http://someimageurl.png'
+                                },
+                                'status': {
+                                    'type': 'string',
+                                    'enum': ['DRAFT', 'PUBLISH', 'ARCHIVE'],
+                                    'example': 'PUBLISH'
+                                },
+                                'categories': {
+                                    'type': 'array',
+                                    'items': {
+                                        'oneOf': [
+                                            { example: '6467fca11dba2e8cac1130ed' },
+                                            { example: '6467fca11dba2e8cac113023' }
+                                        ]
+                                    }
+                                },
+                                'tags': {
+                                    'items': {
+                                        'oneOf': [
+                                            { example: '6467fca11dba2e8cac1130ed' },
+                                            { example: '6467fca11dba2e8cac113023' }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    'application/x-www-form-urlencoded': {
+                        'schema': {
+                            '$ref': '#/components/schemas/Post'
+                        }
+                    }
+                }
+            },
             newPost: {
                 'required': true,
                 'description': 'Post object for store in database',
@@ -519,20 +623,25 @@ module.exports = {
                                     'type': 'string',
                                     'example': 'http://someimageurl.png'
                                 },
+                                'status': {
+                                    'type': 'string',
+                                    'enum': ['DRAFT', 'PUBLISH', 'ARCHIVE'],
+                                    'example': 'DRAFT'
+                                },
                                 'categories': {
                                     'type': 'array',
                                     'items': {
                                         'oneOf': [
-                                            { example: 'star' },
-                                            { example: 'moon' }
+                                            { example: '6467fca11dba2e8cac1130ed' },
+                                            { example: '6467fca11dba2e8cac113023' }
                                         ]
                                     }
                                 },
                                 'tags': {
                                     'items': {
                                         'oneOf': [
-                                            { example: 'dark' },
-                                            { example: 'lion' }
+                                            { example: '6467fca11dba2e8cac1130ed' },
+                                            { example: '6467fca11dba2e8cac113023' }
                                         ]
                                     }
                                 }
@@ -625,6 +734,22 @@ module.exports = {
             }
         },
         'responses': {
+            ok: {
+                'description': 'success request',
+                'content': {
+                    'application/json': {
+                        'schema': {
+                            'type': 'object',
+                            'properties': {
+                                'msg': {
+                                    'type': 'string',
+                                    'example': 'ok'
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             getPostByIdResponse: {
                 'description': 'response of get post by id',
                 'content': {
