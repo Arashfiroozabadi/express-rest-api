@@ -35,6 +35,11 @@ const post = new Schema<IPost>(
         photo: {
             type: String
         },
+        status: {
+            type: String,
+            enum: ['PUBLISH', 'DRAFT', 'ARCHIVE'],
+            default: 'DRAFT'
+        },
         author: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'

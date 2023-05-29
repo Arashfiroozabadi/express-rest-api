@@ -6,6 +6,7 @@ export interface IPost {
     like?: number;
     dislike?: number;
     photo?: string;
+    status: 'PUBLISH'| 'DRAFT'| 'ARCHIVE'
     publishAt?: Date;
     updateAt?: Date;
     createdAt?: Date;
