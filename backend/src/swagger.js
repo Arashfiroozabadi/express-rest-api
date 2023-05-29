@@ -11,13 +11,21 @@ module.exports = {
     },
     'tags': [
         {
+            'name': 'Users',
+            'description': 'CRUD API for Users'
+        },
+        {
             'name': 'Posts',
             'description': 'CRUD API for Posts'
         },
         {
-            'name': 'Users',
-            'description': 'CRUD API for Users'
-        }
+            'name': 'Categories',
+            'description': 'CRUD API for Categories'
+        },
+        {
+            'name': 'Tags',
+            'description': 'CRUD API for Tags'
+        },
     ],
     'paths': {
         '/api/users': {
@@ -292,7 +300,7 @@ module.exports = {
                         '$ref': '#/components/responses/ok'
                     },
                     400: {
-                        '$ref': '#/components/responses/invalidDataForUpdatePost',
+                        '$ref': '#/components/responses/invalidDataForUpdatePost'
                     },
                     401: {
                         '$ref': '#/components/responses/unauthorized'
@@ -335,7 +343,154 @@ module.exports = {
                         '$ref': '#/components/responses/ok'
                     },
                     400: {
-                        '$ref': '#/components/responses/requiredID',
+                        '$ref': '#/components/responses/requiredID'
+                    },
+                    401: {
+                        '$ref': '#/components/responses/unauthorized'
+                    },
+                    403: {
+                        '$ref': '#/components/responses/accessDenied'
+                    },
+                    404: {
+                        '$ref': '#/components/responses/notFound'
+                    },
+                    500: {
+                        '$ref': '#/components/responses/500'
+                    }
+                }
+            }
+        },
+        '/api/categories': {
+            get: {
+                'tags': [
+                    'Categories'
+                ],
+                'summary': 'Get all categories',
+                'responses': {
+                    '200': {
+                        'description': 'list of categories',
+                        'content': {
+                            'application/json': {
+                                'schema': {
+                                    type: 'array',
+                                    items: {
+                                        '$ref': '#/components/schemas/Category'
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    '500': {
+                        '$ref': '#/components/responses/500'
+                    }
+                }
+            },
+            post: {
+                'tags': [
+                    'Categories'
+                ],
+                'summary': 'create new Category',
+                'description': 'create new post by user and save in database',
+                'operationId': 'NewCategory',
+                'security': [
+                    {
+                        'bearerAuth': []
+                    }
+                ],
+                'requestBody': {
+                    '$ref': '#/components/requestBodies/newCategory'
+                },
+                'responses': {
+                    201: {
+                        'description': 'category ID',
+                        'content': {
+                            'application/json': {
+                                'schema': {
+                                    'type': 'object',
+                                    'properties': {
+                                        '_id': {
+                                            'type': 'string',
+                                            'example': '6467fca11dba2e8cac1130ed'
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    400: {
+                        '$ref': '#/components/responses/invalidDataForCreateNewCategory'
+                    },
+                    401: {
+                        '$ref': '#/components/responses/unauthorized'
+                    },
+                    500: {
+                        '$ref': '#/components/responses/500'
+                    }
+                }
+            }
+        },
+        '/api/categories/{_id}': {
+            'get': {
+                tags: ['Category'],
+                'summary': 'get category by ID',
+                'parameters': [
+                    {
+                        'name': '_id',
+                        'in': 'path',
+                        'description': 'category _id',
+                        'required': true,
+                        'schema': {
+                            'type': 'string',
+                            'pattern': '^[a-zA-Z0-9]{24}$',
+                            'format': 'bson-objectid'
+                        }
+                    }
+                ],
+                'responses': {
+                    200: {
+                        '$ref': '#/components/responses/getCategoryByIdResponse'
+                    },
+                    400: {
+                        '$ref': '#/components/responses/requiredID'
+                    },
+                    404: {
+                        '$ref': '#/components/responses/notFound'
+                    },
+                    500: {
+                        '$ref': '#/components/responses/500'
+                    }
+                }
+            },
+            'put': {
+                tags: ['Category'],
+                'summary': 'update category by ID',
+                'security': [
+                    {
+                        'bearerAuth': []
+                    }
+                ],
+                'parameters': [
+                    {
+                        'name': '_id',
+                        'in': 'path',
+                        'description': 'category _id',
+                        'required': true,
+                        'schema': {
+                            'type': 'string',
+                            'pattern': '^[a-zA-Z0-9]{24}$',
+                            'format': 'bson-objectid'
+                        }
+                    }
+                ],
+                'requestBody': {
+                    '$ref': '#/components/requestBodies/updateCategory'
+                },
+                'responses': {
+                    200: {
+                        '$ref': '#/components/responses/ok'
+                    },
+                    400: {
+                        '$ref': '#/components/responses/invalidDataForUpdatePost'
                     },
                     401: {
                         '$ref': '#/components/responses/unauthorized'
@@ -351,6 +506,48 @@ module.exports = {
                     }
                 }
             },
+            'delete': {
+                tags: ['Categories'],
+                'summary': 'delete category by ID',
+                'security': [
+                    {
+                        'bearerAuth': []
+                    }
+                ],
+                'parameters': [
+                    {
+                        'name': '_id',
+                        'in': 'path',
+                        'description': '_id of category',
+                        'required': true,
+                        'schema': {
+                            'type': 'string',
+                            'pattern': '^[a-zA-Z0-9]{24}$',
+                            'format': 'bson-objectid'
+                        }
+                    }
+                ],
+                'responses': {
+                    201: {
+                        '$ref': '#/components/responses/ok'
+                    },
+                    400: {
+                        '$ref': '#/components/responses/requiredID'
+                    },
+                    401: {
+                        '$ref': '#/components/responses/unauthorized'
+                    },
+                    403: {
+                        '$ref': '#/components/responses/accessDenied'
+                    },
+                    404: {
+                        '$ref': '#/components/responses/notFound'
+                    },
+                    500: {
+                        '$ref': '#/components/responses/500'
+                    }
+                }
+            }
         }
     },
     'components': {
@@ -785,6 +982,31 @@ module.exports = {
                         }
                     }
                 }
+            },
+            newCategory: {
+                'required': true,
+                'description': 'object date for create new category',
+                'content': {
+                    'application/json': {
+                        'schema': {
+                            'required': [
+                                'title'
+                            ],
+                            'type': 'object',
+                            'properties': {
+                                'title': {
+                                    'type': 'string',
+                                    'example': 'sun'
+                                }
+                            }
+                        }
+                    },
+                    'application/x-www-form-urlencoded': {
+                        'schema': {
+                            '$ref': '#/components/schemas/Category'
+                        }
+                    }
+                }
             }
         },
         'responses': {
@@ -798,6 +1020,35 @@ module.exports = {
                                 'msg': {
                                     'type': 'string',
                                     'example': 'ok'
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            getCategoryByIdResponse: {
+                'description': 'response of get category by id',
+                'content': {
+                    'application/json': {
+                        'schema': {
+                            'type': 'object',
+                            'properties': {
+                                '_id': {
+                                    'type': 'string',
+                                    'description': 'objectId created by mongodb',
+                                    'example': '6467fca11dba2e8cac1130ed'
+                                },
+                                'title': {
+                                    'type': 'string',
+                                    'example': 'the best post'
+                                },
+                                'createdAt': {
+                                    'type': 'Date',
+                                    'example': '2022-02-20T07:32:39.656+00:00'
+                                },
+                                'updateAt': {
+                                    'type': 'Date',
+                                    'example': '2022-02-20T07:32:39.656+00:00'
                                 }
                             }
                         }
@@ -1015,7 +1266,7 @@ module.exports = {
                                     { example: 'title is required' },
                                     { example: 'description is required' },
                                     { example: 'abstract number is required' },
-                                    { example: 'id is required' },
+                                    { example: 'id is required' }
                                 ]
                             }
                         }
