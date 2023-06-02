@@ -1,3 +1,8 @@
+import i18next from 'i18next';
+import i18nextMiddleware from 'i18next-http-middleware/cjs';
+import FilesystemBackend from 'i18next-node-fs-backend';
+import sprintf from 'i18next-sprintf-postprocessor';
+
 export const validEmail = 'validEmail';
 export const requireName = 'requireName';
 export const requirePass = 'requirePass';
@@ -14,10 +19,15 @@ export const requireDesc = 'requireDesc';
 export const requireAbstract = 'requireAbstract';
 export const notFound = 'notFound';
 export const accessDenied = 'accessDenied';
+export const onlyAcceptImage = 'onlyAcceptImage';
+export const requireFile = 'requireFile';
 
 const i18nResources = {
     fa: {
         translation: {
+            requireFile: 'ارسال فایل اجباری است',
+            LIMIT_FILE_SIZE: 'حجم فایل بیش از حد مجاز است (حداکثر ۲۰ مگابایت)',
+            onlyAcceptImage: 'فقط فایل تصویری مجاز است',
             '11000': 'داده مورد نظر تکراری است',
             'TokenExpiredError': 'اعتبار احراز هویت شما منقضی شده',
             requireName: 'نام اجباری است',
@@ -40,6 +50,9 @@ const i18nResources = {
     },
     en: {
         translation: {
+            requireFile: 'send file is require',
+            LIMIT_FILE_SIZE: 'file too large (maximum 20Mb)',
+            onlyAcceptImage: 'Only image file is allowed',
             '11000': 'value for this field is duplicated',
             'TokenExpiredError': 'auth token is expired',
             requireName: 'name is required',
@@ -61,4 +74,19 @@ const i18nResources = {
         }
     }
 };
+
+const i18nOptions = {
+    initImmediate: false,
+    lng: 'en',
+    resources: i18nResources
+};
+
+export async function initI18next() {
+    await i18next
+        .use(i18nextMiddleware.LanguageDetector)
+        .use(FilesystemBackend)
+        .use(sprintf)
+        .init(i18nOptions);
+}
+
 export default i18nResources;

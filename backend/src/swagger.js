@@ -25,6 +25,9 @@ module.exports = {
         {
             'name': 'Tags',
             'description': 'CRUD API for Tags'
+        },
+        {
+            'name': 'Uploads'
         }
     ],
     'paths': {
@@ -735,6 +738,31 @@ module.exports = {
                     }
                 }
             }
+        },
+        '/api/uploads/posts': {
+            post: {
+                tags: ['Uploads'],
+                summary: 'upload post photos',
+                requestBody: {
+                    '$ref': '#/components/requestBodies/uploadPhoto'
+                },
+                responses: {
+                    201: {
+                        'description': 'photo url',
+                        'content': {
+                            'application/json': {
+                                'schema': {
+                                    'type': 'string',
+                                    'example': 'photo-1685744149357140947692.png'
+                                }
+                            }
+                        }
+                    },
+                    400: {
+                        '$ref': '#/components/responses/invalidPhotoFormData'
+                    }
+                }
+            }
         }
     },
     'components': {
@@ -957,6 +985,23 @@ module.exports = {
             }
         },
         'requestBodies': {
+            uploadPhoto: {
+                required: true,
+                description: 'form data for uploading photo',
+                content: {
+                    'multipart/form-data': {
+                        schema: {
+                            type: 'object',
+                            properties: {
+                                photo: {
+                                    type: 'string',
+                                    format: 'binary'
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             newTag: {
                 'required': true,
                 'description': 'object date for create new tag',
@@ -1241,6 +1286,24 @@ module.exports = {
             }
         },
         'responses': {
+            invalidPhotoFormData: {
+                'description': 'invalid data for upload photo',
+                'content': {
+                    'application/json': {
+                        'schema': {
+                            'type': 'array',
+                            'items': {
+                                'oneOf': [
+                                    { example: { msg: 'send file is required' } },
+                                    { example: { msg: 'Only image file is allowed' } },
+                                    { example: { msg: 'file too large' } },
+                                    { example: { msg: 'unknown error message' } }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
             invalidDataForUpdateTag: {
                 'description': 'invalid data for create or update tag',
                 'content': {
