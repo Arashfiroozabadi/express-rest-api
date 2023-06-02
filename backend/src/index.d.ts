@@ -5,6 +5,7 @@ declare global {
         interface Request {
             t: (...args: any) => string;
             user: IUser;
+            fileName: string
         }
     }
 }
