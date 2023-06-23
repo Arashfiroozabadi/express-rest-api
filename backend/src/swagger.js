@@ -363,6 +363,47 @@ module.exports = {
                 }
             }
         },
+        '/api/posts/{_id}/comment': {
+            post: {
+                tags: ['Posts'],
+                summary: 'add comment on post',
+                'security': [
+                    {
+                        'bearerAuth': []
+                    }
+                ],
+                'parameters': [
+                    {
+                        'name': '_id',
+                        'in': 'path',
+                        'description': 'ID of Post to return',
+                        'required': true,
+                        'schema': {
+                            'type': 'string',
+                            'pattern': '^[a-zA-Z0-9]{24}$',
+                            'format': 'bson-objectid'
+                        }
+                    }
+                ],
+                'requestBody': {
+                    '$ref': '#/components/requestBodies/addComment'
+                },
+                responses: {
+                    201: {
+                        '$ref': '#/components/responses/ok'
+                    },
+                    400: {
+                        '$ref': '#/components/responses/requiredID'
+                    },
+                    404: {
+                        '$ref': '#/components/responses/notFound'
+                    },
+                    500: {
+                        '$ref': '#/components/responses/500'
+                    }
+                }
+            }
+        },
         '/api/categories': {
             get: {
                 'tags': [
@@ -985,6 +1026,26 @@ module.exports = {
             }
         },
         'requestBodies': {
+            addComment: {
+                required: true,
+                description: 'message of comment',
+                content: {
+                    'application/json': {
+                        'schema': {
+                            'required': [
+                                'msg'
+                            ],
+                            'type': 'object',
+                            'properties': {
+                                'msg': {
+                                    'type': 'string',
+                                    'example': 'my first comment'
+                                }
+                            }
+                        }
+                    }
+                }
+            },
             uploadPhoto: {
                 required: true,
                 description: 'form data for uploading photo',

@@ -2,10 +2,11 @@ import { Router } from 'express';
 
 import PostModel from '../../model/Post';
 import auth from '../../middleware/auth';
-import { checkPostData } from './validations';
+import { checkPostData, checkCommentData } from './validations';
 import handleErrors from '../../lib/handleErrors';
 import checkObjectId from '../../lib/checkObjectId';
 import { accessDenied, notFound } from '../../lib/i18nResources';
+import CommentModel from '../../model/Comment';
 
 
 const routes = Router();
@@ -49,7 +50,8 @@ routes.get('/:id', async (req, res) => {
             .populate([
                 { path: 'author', select: 'name' },
                 { path: 'categories', select: 'title' },
-                { path: 'tags', select: 'title' }
+                { path: 'tags', select: 'title' },
+                { path: 'comments' }
             ]);
 
         // send error response
@@ -124,6 +126,48 @@ routes.put('/:id', auth, async (req, res) => {
         post.photo = body.photo;
         post.status = body.status;
         await post.save();
+
+        return res.status(201).send({ msg: 'ok' });
+    } catch (err) {
+        handleErrors(err, req, res);
+    }
+});
+
+/**
+ * add comment on post
+ */
+routes.post('/:id/comment', auth, async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { body } = req;
+        const result = checkObjectId(id, req.t);
+
+        // send error response
+        if (result.err) return res.status(400).send({ msg: result.msg });
+
+        // validate request body
+        const validateBody = await checkCommentData(body, req.t);
+        // send error response
+        if ('err' in validateBody) return res.status(400).send({ msg: validateBody.msg });
+
+        const comment = new CommentModel({
+            msg: body.msg,
+            author: req.user._id
+        });
+
+        // query on db
+        const post = await PostModel.findByIdAndUpdate(
+            result.id,
+            {
+                $push: {
+                    comments: comment
+                }
+            }
+        );
+
+        // send error response
+        if (!post) return res.status(404).send({ msg: req.t(notFound) });
+        await comment.save();
 
         return res.status(201).send({ msg: 'ok' });
     } catch (err) {

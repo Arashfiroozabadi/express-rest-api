@@ -21,10 +21,12 @@ export const notFound = 'notFound';
 export const accessDenied = 'accessDenied';
 export const onlyAcceptImage = 'onlyAcceptImage';
 export const requireFile = 'requireFile';
+export const requireMSG = 'requireMSG';
 
 const i18nResources = {
     fa: {
         translation: {
+            requireMSG: 'متن اجباری است',
             requireFile: 'ارسال فایل اجباری است',
             LIMIT_FILE_SIZE: 'حجم فایل بیش از حد مجاز است (حداکثر ۲۰ مگابایت)',
             onlyAcceptImage: 'فقط فایل تصویری مجاز است',
@@ -50,6 +52,7 @@ const i18nResources = {
     },
     en: {
         translation: {
+            requireMSG: 'message is require',
             requireFile: 'send file is require',
             LIMIT_FILE_SIZE: 'file too large (maximum 20Mb)',
             onlyAcceptImage: 'Only image file is allowed',
