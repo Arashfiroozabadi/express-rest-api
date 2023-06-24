@@ -8,7 +8,13 @@ const category = new Schema<ICategory>(
         title: {
             type: String,
             required: true
-        }
+        },
+        items: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'SubCategory'
+            }
+        ]
     },
     { timestamps: true }
 );

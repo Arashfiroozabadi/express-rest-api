@@ -593,6 +593,53 @@ module.exports = {
                 }
             }
         },
+        '/api/categories/{_id}/sub_category': {
+            'put': {
+                tags: ['Categories'],
+                'summary': 'update sub category of category',
+                'security': [
+                    {
+                        'bearerAuth': []
+                    }
+                ],
+                'parameters': [
+                    {
+                        'name': '_id',
+                        'in': 'path',
+                        'description': 'category _id',
+                        'required': true,
+                        'schema': {
+                            'type': 'string',
+                            'pattern': '^[a-zA-Z0-9]{24}$',
+                            'format': 'bson-objectid'
+                        }
+                    }
+                ],
+                'requestBody': {
+                    '$ref': '#/components/requestBodies/updateSubCategory'
+                },
+                'responses': {
+                    200: {
+                        '$ref': '#/components/responses/ok'
+                    },
+                    400: {
+                        '$ref': '#/components/responses/invalidDataForUpdateCategory'
+                    },
+                    401: {
+                        '$ref': '#/components/responses/unauthorized'
+                    },
+                    403: {
+                        '$ref': '#/components/responses/accessDenied'
+                    },
+                    404: {
+                        '$ref': '#/components/responses/notFound'
+                    },
+                    500: {
+                        '$ref': '#/components/responses/500'
+                    }
+                }
+            },
+        },
         '/api/tags': {
             get: {
                 'tags': [
@@ -1344,7 +1391,27 @@ module.exports = {
                         }
                     }
                 }
-            }
+            },
+            updateSubCategory: {
+                'required': true,
+                'description': 'object data for add new sub category',
+                'content': {
+                    'application/json': {
+                        'schema': {
+                            'required': [
+                                'title'
+                            ],
+                            'type': 'object',
+                            'properties': {
+                                'title': {
+                                    'type': 'string',
+                                    'example': 'moz'
+                                }
+                            }
+                        }
+                    }
+                }
+            },
         },
         'responses': {
             invalidPhotoFormData: {

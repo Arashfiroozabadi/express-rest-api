@@ -6,6 +6,7 @@ import handleErrors from '../../lib/handleErrors';
 import checkObjectId from '../../lib/checkObjectId';
 import { notFound } from '../../lib/i18nResources';
 import { checkCategoryData } from './validations';
+import SubCategoryModel from '../../model/SubCategoryModel';
 
 
 const routes = Router();
@@ -74,7 +75,7 @@ routes.post('/', auth, async (req, res) => {
 });
 
 /**
- * edit category by id
+ * edit category title by id
  */
 routes.put('/:id', auth, async (req, res) => {
     try {
@@ -102,6 +103,30 @@ routes.put('/:id', auth, async (req, res) => {
         if (!category) return res.status(404).send({ msg: req.t(notFound) });
 
         return res.status(201).send({ msg: 'ok' });
+    } catch (err) {
+        handleErrors(err, req, res);
+    }
+});
+
+/**
+ * edit subCategories of category
+ */
+routes.put('/:id/sub_category', auth, async (req, res) => {
+    try {
+        const { body } = req;
+        const newSubCategory = new SubCategoryModel({ title: body.title });
+        await newSubCategory.save();
+
+        await CategoryModel.findByIdAndUpdate(
+            req.params.id,
+            {
+                $push: {
+                    items: newSubCategory._id
+                }
+            }
+        );
+
+        res.status(201).send({ msg: 'ok' });
     } catch (err) {
         handleErrors(err, req, res);
     }
