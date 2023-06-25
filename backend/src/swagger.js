@@ -23,6 +23,10 @@ module.exports = {
             'description': 'CRUD API for Categories'
         },
         {
+            'name': 'SubCategories',
+            'description': 'CRUD API for Categories'
+        },
+        {
             'name': 'Tags',
             'description': 'CRUD API for Tags'
         },
@@ -593,6 +597,53 @@ module.exports = {
                 }
             }
         },
+        '/api/categories/{_id}/sub_category': {
+            'put': {
+                tags: ['Categories'],
+                'summary': 'update sub category of category',
+                'security': [
+                    {
+                        'bearerAuth': []
+                    }
+                ],
+                'parameters': [
+                    {
+                        'name': '_id',
+                        'in': 'path',
+                        'description': 'category _id',
+                        'required': true,
+                        'schema': {
+                            'type': 'string',
+                            'pattern': '^[a-zA-Z0-9]{24}$',
+                            'format': 'bson-objectid'
+                        }
+                    }
+                ],
+                'requestBody': {
+                    '$ref': '#/components/requestBodies/updateSubCategory'
+                },
+                'responses': {
+                    200: {
+                        '$ref': '#/components/responses/ok'
+                    },
+                    400: {
+                        '$ref': '#/components/responses/invalidDataForUpdateCategory'
+                    },
+                    401: {
+                        '$ref': '#/components/responses/unauthorized'
+                    },
+                    403: {
+                        '$ref': '#/components/responses/accessDenied'
+                    },
+                    404: {
+                        '$ref': '#/components/responses/notFound'
+                    },
+                    500: {
+                        '$ref': '#/components/responses/500'
+                    }
+                }
+            }
+        },
         '/api/tags': {
             get: {
                 'tags': [
@@ -804,6 +855,121 @@ module.exports = {
                     }
                 }
             }
+        },
+        '/api/sub_category': {
+            get: {
+                'tags': [
+                    'SubCategories'
+                ],
+                'summary': 'Get all sub categories',
+                'responses': {
+                    '200': {
+                        'description': 'list of sub categories',
+                        'content': {
+                            'application/json': {
+                                'schema': {
+                                    type: 'array',
+                                    items: {
+                                        '$ref': '#/components/schemas/SubCategory'
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    '500': {
+                        '$ref': '#/components/responses/500'
+                    }
+                }
+            }
+        },
+        '/api/sub_category/{_id}': {
+            'put': {
+                tags: ['SubCategories'],
+                'summary': 'update sub category title by ID',
+                'security': [
+                    {
+                        'bearerAuth': []
+                    }
+                ],
+                'parameters': [
+                    {
+                        'name': '_id',
+                        'in': 'path',
+                        'description': 'sub category _id',
+                        'required': true,
+                        'schema': {
+                            'type': 'string',
+                            'pattern': '^[a-zA-Z0-9]{24}$',
+                            'format': 'bson-objectid'
+                        }
+                    }
+                ],
+                'requestBody': {
+                    '$ref': '#/components/requestBodies/updateCategory'
+                },
+                'responses': {
+                    200: {
+                        '$ref': '#/components/responses/ok'
+                    },
+                    400: {
+                        '$ref': '#/components/responses/invalidDataForUpdateCategory'
+                    },
+                    401: {
+                        '$ref': '#/components/responses/unauthorized'
+                    },
+                    403: {
+                        '$ref': '#/components/responses/accessDenied'
+                    },
+                    404: {
+                        '$ref': '#/components/responses/notFound'
+                    },
+                    500: {
+                        '$ref': '#/components/responses/500'
+                    }
+                }
+            },
+            'delete': {
+                tags: ['SubCategories'],
+                'summary': 'delete sub category by ID',
+                'security': [
+                    {
+                        'bearerAuth': []
+                    }
+                ],
+                'parameters': [
+                    {
+                        'name': '_id',
+                        'in': 'path',
+                        'description': 'sub _id of category',
+                        'required': true,
+                        'schema': {
+                            'type': 'string',
+                            'pattern': '^[a-zA-Z0-9]{24}$',
+                            'format': 'bson-objectid'
+                        }
+                    }
+                ],
+                'responses': {
+                    201: {
+                        '$ref': '#/components/responses/ok'
+                    },
+                    400: {
+                        '$ref': '#/components/responses/requiredID'
+                    },
+                    401: {
+                        '$ref': '#/components/responses/unauthorized'
+                    },
+                    403: {
+                        '$ref': '#/components/responses/accessDenied'
+                    },
+                    404: {
+                        '$ref': '#/components/responses/notFound'
+                    },
+                    500: {
+                        '$ref': '#/components/responses/500'
+                    }
+                }
+            }
         }
     },
     'components': {
@@ -936,6 +1102,53 @@ module.exports = {
                 }
             },
             Category: {
+                'required': [
+                    'title'
+                ],
+                'type': 'object',
+                'properties': {
+                    '_id': {
+                        'type': 'string',
+                        'description': 'objectId created by mongodb',
+                        'example': '6467fca11dba2e8cac1130ed'
+                    },
+                    'title': {
+                        'type': 'string',
+                        'example': 'star'
+                    },
+                    'items': {
+                        'type': 'object',
+                        properties: {
+                            '_id': {
+                                'type': 'string',
+                                'description': 'objectId created by mongodb',
+                                'example': '6467fca11dba2e8cac1130ed'
+                            },
+                            'title': {
+                                'type': 'string',
+                                'example': 'star'
+                            },
+                            'updateAt': {
+                                'type': 'Date',
+                                'example': '2022-02-20T07:32:39.656+00:00'
+                            },
+                            'createdAt': {
+                                'type': 'Date',
+                                'example': '2022-02-20T07:32:39.656+00:00'
+                            }
+                        }
+                    },
+                    'updateAt': {
+                        'type': 'Date',
+                        'example': '2022-02-20T07:32:39.656+00:00'
+                    },
+                    'createdAt': {
+                        'type': 'Date',
+                        'example': '2022-02-20T07:32:39.656+00:00'
+                    }
+                }
+            },
+            SubCategory: {
                 'required': [
                     'title'
                 ],
@@ -1341,6 +1554,26 @@ module.exports = {
                     'application/x-www-form-urlencoded': {
                         'schema': {
                             '$ref': '#/components/schemas/Category'
+                        }
+                    }
+                }
+            },
+            updateSubCategory: {
+                'required': true,
+                'description': 'object data for add new sub category',
+                'content': {
+                    'application/json': {
+                        'schema': {
+                            'required': [
+                                'title'
+                            ],
+                            'type': 'object',
+                            'properties': {
+                                'title': {
+                                    'type': 'string',
+                                    'example': 'moz'
+                                }
+                            }
                         }
                     }
                 }

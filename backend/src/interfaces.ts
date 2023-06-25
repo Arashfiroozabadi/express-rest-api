@@ -6,7 +6,7 @@ export interface IPost {
     like?: number;
     dislike?: number;
     photo?: string;
-    status: 'PUBLISH'| 'DRAFT'| 'ARCHIVE'
+    status: 'PUBLISH' | 'DRAFT' | 'ARCHIVE';
     publishAt?: Date;
     updateAt?: Date;
     createdAt?: Date;
@@ -17,6 +17,13 @@ export interface IPost {
 }
 
 export interface ICategory {
+    title: string;
+    createdAt?: Date;
+    updateAt?: Date;
+    items?: ISubCategory[];
+}
+
+export interface ISubCategory {
     title: string;
     createdAt?: Date;
     updateAt?: Date;
